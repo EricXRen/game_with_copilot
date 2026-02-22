@@ -1,0 +1,38 @@
+[project]
+name = "tetris-game"
+version = "1.0.0"
+description = "A classic Tetris game built with Python and Pygame"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    { name = "Developer", email = "dev@example.com" }
+]
+dependencies = [
+    "pygame>=2.0.0",
+]
+
+[project.scripts]
+tetris = "games.tetris.tetris:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-mock>=3.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+select = ["E", "F", "W"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/games"]
