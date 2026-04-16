@@ -1,4 +1,5 @@
 """Pytest configuration and shared fixtures."""
+
 import pytest
 import sys
 from unittest.mock import MagicMock, patch
@@ -30,19 +31,19 @@ def mock_pygame():
     mock_pg.event = MagicMock()
     mock_pg.event.get = MagicMock(return_value=[])
     mock_pg.draw = MagicMock()
-    
-    sys.modules['pygame'] = mock_pg
+
+    sys.modules["pygame"] = mock_pg
     yield mock_pg
     # Cleanup
-    if 'pygame' in sys.modules:
-        del sys.modules['pygame']
+    if "pygame" in sys.modules:
+        del sys.modules["pygame"]
 
 
 @pytest.fixture
 def tetris_game(mock_pygame):
     """Create a TetrisGame instance for testing."""
     from games.tetris.tetris import TetrisGame
-    
+
     game = TetrisGame()
     return game
 
@@ -51,5 +52,22 @@ def tetris_game(mock_pygame):
 def tetromino(mock_pygame):
     """Create a Tetromino instance for testing."""
     from games.tetris.tetris import Tetromino
-    
+
     return Tetromino()
+
+
+@pytest.fixture
+def snake_game(mock_pygame):
+    """Create a SnakeGame instance for testing."""
+    from games.snake.snake import SnakeGame
+
+    game = SnakeGame()
+    return game
+
+
+@pytest.fixture
+def snake(mock_pygame):
+    """Create a Snake instance for testing."""
+    from games.snake.snake import Snake
+
+    return Snake()

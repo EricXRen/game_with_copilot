@@ -1,4 +1,5 @@
 """Tests for the Tetromino class."""
+
 import pytest
 from games.tetris.tetris import Tetromino
 from games.tetris.config import (
@@ -53,25 +54,25 @@ class TestTetrominoRotation:
         """Test rotating a T-piece."""
         piece = Tetromino(piece_type="T")
         original_shape = [row[:] for row in piece.shape]
-        
+
         # Rotate 4 times should return to original
         for _ in range(4):
             piece.rotate()
-        
+
         assert piece.shape == original_shape
 
     def test_rotate_i_piece(self):
         """Test rotating an I-piece (2 unique rotations)."""
         piece = Tetromino(piece_type="I")
         original_shape = [row[:] for row in piece.shape]
-        
+
         # First rotation
         piece.rotate()
         rotated_once = [row[:] for row in piece.shape]
-        
+
         # Second rotation should be different
         assert rotated_once != original_shape
-        
+
         # Rotate again and should return to original
         piece.rotate()
         assert piece.shape == original_shape
@@ -80,7 +81,7 @@ class TestTetrominoRotation:
         """Test that O-piece (square) doesn't change on rotation."""
         piece = Tetromino(piece_type="O")
         original_shape = [row[:] for row in piece.shape]
-        
+
         piece.rotate()
         assert piece.shape == original_shape
 
@@ -100,7 +101,7 @@ class TestTetrominoGetBlocks:
         piece.x = 0
         piece.y = 0
         blocks = piece.get_blocks()
-        
+
         # O-piece is 2x2, all cells are filled
         expected = [(0, 0), (1, 0), (0, 1), (1, 1)]
         assert sorted(blocks) == sorted(expected)
@@ -111,7 +112,7 @@ class TestTetrominoGetBlocks:
         piece.x = 2
         piece.y = 0
         blocks = piece.get_blocks()
-        
+
         # I-piece is 1x4 horizontal
         expected = [(2, 0), (3, 0), (4, 0), (5, 0)]
         assert sorted(blocks) == sorted(expected)
@@ -122,7 +123,7 @@ class TestTetrominoGetBlocks:
         piece.x = 5
         piece.y = 10
         blocks = piece.get_blocks()
-        
+
         # All blocks should have x >= 5 and y >= 10
         for x, y in blocks:
             assert x >= 5
@@ -134,7 +135,7 @@ class TestTetrominoGetBlocks:
         piece.x = 0
         piece.y = 0
         blocks = piece.get_blocks()
-        
+
         # T-piece has 4 blocks
         assert len(blocks) == 4
         # All blocks should be in first 3x2 area

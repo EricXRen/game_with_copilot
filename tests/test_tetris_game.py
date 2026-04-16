@@ -1,4 +1,5 @@
 """Tests for the TetrisGame class."""
+
 import pytest
 from games.tetris.tetris import TetrisGame, Tetromino
 from games.tetris.config import (
@@ -49,10 +50,10 @@ class TestGameReset:
         tetris_game.lines = 5
         tetris_game.level = 3
         tetris_game.game_over = True
-        
+
         # Reset
         tetris_game.reset_game()
-        
+
         # Check state is reset
         assert tetris_game.score == 0
         assert tetris_game.lines == 0
@@ -64,10 +65,10 @@ class TestGameReset:
         # Place something on board
         tetris_game.board[0][0] = (255, 0, 0)
         tetris_game.board[5][5] = (0, 255, 0)
-        
+
         # Reset
         tetris_game.reset_game()
-        
+
         # Check board is cleared
         assert all(cell is None for row in tetris_game.board for cell in row)
 
@@ -102,7 +103,7 @@ class TestCollisionDetection:
         """Test that piece cannot be placed where other pieces exist."""
         # Place a block on the board
         tetris_game.board[5][5] = (255, 0, 0)
-        
+
         # Create a piece that would collide
         piece = Tetromino(piece_type="O")  # 2x2
         # Position at (4, 4) would have a block at (5, 5)
@@ -122,10 +123,10 @@ class TestPiecePlacement:
         """Test that place_piece updates board correctly."""
         piece = tetris_game.current_piece
         color = piece.color
-        
+
         # Place the piece
         tetris_game.place_piece()
-        
+
         # Check that board has the piece's color in correct positions
         placed_blocks = tetris_game.current_piece.get_blocks()
         for x, y in placed_blocks:
@@ -136,9 +137,9 @@ class TestPiecePlacement:
         """Test that only visible blocks are placed on board."""
         piece = tetris_game.current_piece
         piece.y = -2  # Position with blocks above board
-        
+
         tetris_game.place_piece()
-        
+
         # Count non-None cells on board
         filled_cells = sum(1 for row in tetris_game.board for cell in row if cell is not None)
         # Should place only the visible blocks
@@ -153,9 +154,9 @@ class TestLineClearing:
         # Fill the entire bottom row
         for col in range(BOARD_WIDTH):
             tetris_game.board[BOARD_HEIGHT - 1][col] = (255, 0, 0)
-        
+
         lines_cleared = tetris_game.clear_lines()
-        
+
         assert lines_cleared == 1
         assert tetris_game.lines == 1
 
@@ -165,9 +166,9 @@ class TestLineClearing:
         for row in range(BOARD_HEIGHT - 3, BOARD_HEIGHT):
             for col in range(BOARD_WIDTH):
                 tetris_game.board[row][col] = (255, 0, 0)
-        
+
         lines_cleared = tetris_game.clear_lines()
-        
+
         assert lines_cleared == 3
         assert tetris_game.lines == 3
 
@@ -176,9 +177,9 @@ class TestLineClearing:
         # Fill most of bottom row but leave one cell empty
         for col in range(BOARD_WIDTH - 1):
             tetris_game.board[BOARD_HEIGHT - 1][col] = (255, 0, 0)
-        
+
         lines_cleared = tetris_game.clear_lines()
-        
+
         assert lines_cleared == 0
         assert tetris_game.lines == 0
 
@@ -189,14 +190,14 @@ class TestLineClearing:
         # Row -1: one block
         # Row 0: full (will be cleared)
         test_row = BOARD_HEIGHT - 1
-        
+
         tetris_game.board[test_row - 2][3] = (255, 0, 0)
         tetris_game.board[test_row - 1][3] = (255, 0, 0)
         for col in range(BOARD_WIDTH):
             tetris_game.board[test_row][col] = (255, 0, 0)
-        
+
         lines_cleared = tetris_game.clear_lines()
-        
+
         assert lines_cleared == 1
         # Check that blocks above dropped
         assert tetris_game.board[test_row][3] == (255, 0, 0)
@@ -205,13 +206,13 @@ class TestLineClearing:
     def test_clear_lines_updates_score(self, tetris_game):
         """Test that clearing lines updates the score."""
         initial_score = tetris_game.score
-        
+
         # Fill bottom row
         for col in range(BOARD_WIDTH):
             tetris_game.board[BOARD_HEIGHT - 1][col] = (255, 0, 0)
-        
+
         tetris_game.clear_lines()
-        
+
         # Score should increase
         assert tetris_game.score > initial_score
 
@@ -224,19 +225,19 @@ class TestGameLevelProgression:
         # Simulate clearing enough lines for level 2
         tetris_game.lines = LINES_PER_LEVEL - 1
         tetris_game.board[BOARD_HEIGHT - 1] = [(255, 0, 0)] * BOARD_WIDTH
-        
+
         tetris_game.clear_lines()
-        
+
         # Should now be level 2
         assert tetris_game.level == 2
 
     def test_drop_speed_increases_per_level(self, tetris_game):
         """Test that drop speed increases with level."""
         initial_speed = tetris_game.drop_speed
-        
+
         tetris_game.level = 2
         new_speed = INITIAL_DROP_SPEED - (2 - 1) * SPEED_DECREASE_PER_LEVEL
-        
+
         assert new_speed < initial_speed
 
 
@@ -247,9 +248,9 @@ class TestSpawnNewPiece:
         """Test that spawn_new_piece moves next piece to current."""
         next_piece = tetris_game.next_piece
         next_piece_type = next_piece.type
-        
+
         tetris_game.spawn_new_piece()
-        
+
         # Current should now be the previous next piece
         assert tetris_game.current_piece.type == next_piece_type
         # Next piece should be different
@@ -261,9 +262,9 @@ class TestSpawnNewPiece:
         for col in range(BOARD_WIDTH):
             tetris_game.board[0][col] = (255, 0, 0)
             tetris_game.board[1][col] = (255, 0, 0)
-        
+
         tetris_game.spawn_new_piece()
-        
+
         # Game should be over
         assert tetris_game.game_over is True
 
@@ -274,28 +275,30 @@ class TestGameUpdate:
     def test_piece_drops_over_time(self, tetris_game):
         """Test that piece drops periodically."""
         initial_y = tetris_game.current_piece.y
-        
+
         # Manually trigger drop
-        if tetris_game.can_place_piece(tetris_game.current_piece, 
-                                       tetris_game.current_piece.x, 
-                                       tetris_game.current_piece.y + 1):
+        if tetris_game.can_place_piece(
+            tetris_game.current_piece, tetris_game.current_piece.x, tetris_game.current_piece.y + 1
+        ):
             tetris_game.current_piece.y += 1
-        
+
         assert tetris_game.current_piece.y > initial_y
 
     def test_piece_placement_on_ground_collision(self, tetris_game):
         """Test that piece is placed when it hits the bottom."""
         piece = tetris_game.current_piece
-        
+
         # Move piece to bottom
         while tetris_game.can_place_piece(piece, piece.x, piece.y + 1):
             piece.y += 1
-        
-        initial_board_count = sum(1 for row in tetris_game.board for cell in row if cell is not None)
-        
+
+        initial_board_count = sum(
+            1 for row in tetris_game.board for cell in row if cell is not None
+        )
+
         # Try to drop one more (should place)
         if not tetris_game.can_place_piece(piece, piece.x, piece.y + 1):
             tetris_game.place_piece()
-        
+
         final_board_count = sum(1 for row in tetris_game.board for cell in row if cell is not None)
         assert final_board_count > initial_board_count

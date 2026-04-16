@@ -1,6 +1,6 @@
-# Game Development Practice with GitHub Copilot Agent
+# Game Development Practice with Agents 
 
-A collection of games built with Python to practice using **GitHub Copilot Agent** for game development. This project demonstrates how AI-assisted development can accelerate game creation while maintaining clean, testable code.
+A collection of games built with Python to practice using **GitHub Copilot Agent**, my own simple **ReAct agent** or **Claude Code** for game development. This project demonstrates how AI-assisted development can accelerate game creation while maintaining clean, testable code.
 
 ## 📋 Project Goals
 
