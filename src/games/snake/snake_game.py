@@ -26,6 +26,32 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
+# 控制模式映射
+CONTROL_MODES = {
+    "arrow": {
+        pygame.K_UP: UP,
+        pygame.K_DOWN: DOWN,
+        pygame.K_LEFT: LEFT,
+        pygame.K_RIGHT: RIGHT,
+    },
+    "vi": {
+        pygame.K_k: UP,
+        pygame.K_j: DOWN,
+        pygame.K_h: LEFT,
+        pygame.K_l: RIGHT,
+    },
+}
+
+
+def get_direction_from_key(key, control_mode="arrow"):
+    """Return the movement direction for a key based on current control mode."""
+    return CONTROL_MODES.get(control_mode, {}).get(key)
+
+
+def toggle_control_mode(control_mode):
+    """Toggle between arrow key mode and vi key mode."""
+    return "vi" if control_mode == "arrow" else "arrow"
+
 
 class Snake:
     def __init__(self):
@@ -147,6 +173,21 @@ def draw_score(surface, score, high_score):
     surface.blit(high_score_text, (WIDTH - high_score_text.get_width() - 5, 5))
 
 
+def draw_control_help(surface, control_mode):
+    font = pygame.font.SysFont("arial", 20)
+    mode_label = "vi (hjkl)" if control_mode == "vi" else "Arrow"
+    control_text = font.render(f"Control Mode: {mode_label}", True, WHITE)
+    toggle_text = font.render("Press TAB to switch control keys", True, WHITE)
+    if control_mode == "vi":
+        key_text = font.render("H=left J=down K=up L=right", True, WHITE)
+    else:
+        key_text = font.render("Use arrow keys to move", True, WHITE)
+
+    surface.blit(control_text, (5, 35))
+    surface.blit(toggle_text, (5, 60))
+    surface.blit(key_text, (5, 85))
+
+
 def draw_game_over(surface, score):
     font_large = pygame.font.SysFont("arial", 50)
     font_small = pygame.font.SysFont("arial", 30)
@@ -179,6 +220,7 @@ def main():
     # 游戏状态
     game_over = False
     high_score = 0
+    control_mode = "arrow"
 
     # 主游戏循环
     while True:
@@ -201,17 +243,15 @@ def main():
                         sys.exit()
                 else:
                     # 控制蛇的方向
-                    if event.key == pygame.K_UP:
-                        snake.turn(UP)
-                    elif event.key == pygame.K_DOWN:
-                        snake.turn(DOWN)
-                    elif event.key == pygame.K_LEFT:
-                        snake.turn(LEFT)
-                    elif event.key == pygame.K_RIGHT:
-                        snake.turn(RIGHT)
-                    elif event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                    if event.key == pygame.K_TAB:
+                        control_mode = toggle_control_mode(control_mode)
+                    else:
+                        direction = get_direction_from_key(event.key, control_mode)
+                        if direction:
+                            snake.turn(direction)
+                        elif event.key == pygame.K_ESCAPE:
+                            pygame.quit()
+                            sys.exit()
 
         if not game_over:
             # 移动蛇
@@ -239,6 +279,7 @@ def main():
         snake.draw(screen)
         food.draw(screen)
         draw_score(screen, snake.score, high_score)
+        draw_control_help(screen, control_mode)
 
         if game_over:
             draw_game_over(screen, snake.score)

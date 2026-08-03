@@ -3,6 +3,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+import pygame
 import pytest
 from src.games.snake.snake_game import Snake, Food, UP, DOWN, LEFT, RIGHT, GRID_WIDTH, GRID_HEIGHT
 
@@ -188,6 +189,24 @@ def test_direction_constants():
     assert DOWN == (0, 1)
     assert LEFT == (-1, 0)
     assert RIGHT == (1, 0)
+
+
+def test_control_mode_mapping():
+    from src.games.snake.snake_game import get_direction_from_key, toggle_control_mode
+
+    assert get_direction_from_key(pygame.K_UP, "arrow") == UP
+    assert get_direction_from_key(pygame.K_DOWN, "arrow") == DOWN
+    assert get_direction_from_key(pygame.K_LEFT, "arrow") == LEFT
+    assert get_direction_from_key(pygame.K_RIGHT, "arrow") == RIGHT
+
+    assert get_direction_from_key(pygame.K_k, "vi") == UP
+    assert get_direction_from_key(pygame.K_j, "vi") == DOWN
+    assert get_direction_from_key(pygame.K_h, "vi") == LEFT
+    assert get_direction_from_key(pygame.K_l, "vi") == RIGHT
+    assert get_direction_from_key(pygame.K_UP, "vi") is None
+
+    assert toggle_control_mode("arrow") == "vi"
+    assert toggle_control_mode("vi") == "arrow"
 
 
 if __name__ == "__main__":

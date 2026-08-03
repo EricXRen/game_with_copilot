@@ -1,11 +1,11 @@
 [project]
-name = "tetris-game"
+name = "games"
 version = "1.0.0"
-description = "A classic Tetris game built with Python and Pygame"
+description = "A collection of simple games built with Python and Pygame"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-    { name = "Developer", email = "dev@example.com" }
+    { name = "Eric Ren", email = "dev@example.com" }
 ]
 dependencies = [
     "pygame>=2.0.0",
@@ -23,6 +23,7 @@ dependencies = [
 
 [project.scripts]
 tetris = "games.tetris.tetris:main"
+snake = "games.snake.snake_game:main"
 
 [dependency-groups]
 dev = [

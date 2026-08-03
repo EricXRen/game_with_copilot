@@ -129,6 +129,44 @@ A classic Tetris game built with Python and Pygame featuring:
 - **Game Over**: When pieces reach the top of the board
 
 
+## Snake Game - Python Edition
+
+A classic Snake game built with Python and Pygame featuring:
+- Classic snake gameplay on a grid
+- Arrow key controls, or vi-style `hjkl` controls
+- Press `TAB` to toggle between control modes
+- Score tracking and Game Over handling
+- Restart and quit support
+- Comprehensive unit tests with pytest
+
+#### Controls
+
+| Key | Action |
+|-----|--------|
+| ↑ or K | Move up |
+| ↓ or J | Move down |
+| ← or H | Move left |
+| → or L | Move right |
+| TAB | Toggle between arrow and vi controls |
+| SPACE | Restart on Game Over |
+| ESC | Quit game |
+
+#### Game Mechanics
+
+- **Growth**: Eat food to grow longer and earn points
+- **Collision**: Game ends if the snake runs into itself
+- **Wrapping**: Snake wraps at the screen edge to the opposite side
+
+
+## Future Games
+
+- **Scoring**: Points are awarded for soft dropping and completing lines
+- **Lines**: Complete horizontal lines to clear blocks from the board
+- **Levels**: Level increases every 10 lines cleared
+- **Speed**: Game speed increases with each level
+- **Game Over**: When pieces reach the top of the board
+
+
 
 ## Future Games
 
